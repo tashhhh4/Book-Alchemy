@@ -51,7 +51,13 @@
       {% for book in books %}
       <div class="book-list">
         <div class="cover-img">
-          <img src="{{ book.image }}" alt="No Cover Found">
+          {% if book.image %}
+            <img src="{{ book.image }}" alt="{{ book.title }} - Cover">
+          {% else %}
+            {% if book.isbn %}
+            <span>no cover found</span>
+            {% endif %}
+          {% endif %}
         </div>
         <div>
           <h3>{{ book.title }}</h3>
