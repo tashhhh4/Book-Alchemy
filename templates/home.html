@@ -8,10 +8,16 @@
   </head>
   <body style="padding:10px;">
 
-    <h1>Homepage</h1>
+    <h1>My Books</h1>
 
     {% for book in books %}
-    <div> <h3>{{ book.title }}</h3>
+    <div>
+      <div>
+        <h3>{{ book.title }}</h3>
+      </div>
+      <div>
+        {{ book.author.name }}
+      </div>
     </div>
     {% endfor %}
 

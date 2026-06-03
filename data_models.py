@@ -11,6 +11,8 @@ class Author(db.Model):
     birth_date = db.Column(db.Date, nullable=True)
     date_of_death = db.Column(db.Date, nullable=True)
 
+    books = db.relationship("Book", back_populates="author")
+
     def get_sort_name(self):
         """ Tries to get the author's last name.
         If the author's name is only one word,
@@ -30,10 +32,27 @@ class Author(db.Model):
 
 class Book (db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    isbn = db.Column(db.Integer, unique=True) # isbn-13
+    isbn = db.Column(db.Integer) # isbn-13
     title = db.Column(db.String(300), nullable=False)
     publication_year = db.Column(db.Integer)
+
     author_id = db.Column(db.ForeignKey("author.id"))
+    author = db.relationship("Author", back_populates="books")
+
+    def get_meaningful_sort_title(self):
+        """ Returns the title, transformed for meaningful sorting.
+        
+        Removes words like 'the', 'a', and 'an' from the beginning of
+        the title and converts the remainder to lowercase.
+        """
+        words_to_strip = ['the', 'a', 'an', 'der', 'das']
+        title = self.title.lower()
+        for w in words_to_strip:
+            w += " "
+            if title.startswith(w):
+                return title[len(w):]
+        return title
+
 
     def __str__(self):
         return f"Book \"{self.title}\""

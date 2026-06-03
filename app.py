@@ -41,7 +41,7 @@ def insert_book(title, author_id, isbn, year):
 def list_books():
     """ Returns a collection of Books, ordered by title. """
     books = db.session.execute(db.select(Book).order_by(Book.title)).scalars()
-    return books
+    return sorted(books, key=lambda b: b.get_meaningful_sort_title())
 
 
 def insert_author(name, birthdate, deathdate):
