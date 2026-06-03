@@ -38,6 +38,12 @@ def insert_book(title, author_id, isbn, year):
     return book
 
 
+def list_books():
+    """ Returns a collection of Books, ordered by title. """
+    books = db.session.execute(db.select(Book).order_by(Book.title)).scalars()
+    return books
+
+
 def insert_author(name, birthdate, deathdate):
     """ Creates a new author in the database. """
     author = Author(
@@ -51,7 +57,7 @@ def insert_author(name, birthdate, deathdate):
 
 
 def list_authors():
-    """ Returns a list of authors as Author objects. """
+    """ Returns a collection of Authors, sorted by last name. """
     authors = db.session.execute(db.select(Author).order_by(Author.id)).scalars()
     return sorted(authors, key=lambda a: a.get_sort_name())
 
@@ -59,9 +65,10 @@ def list_authors():
 
 # Define routes
 
-@app.route("/")
+@app.route("/", methods=["GET"])
 def home():
-    return render_template("home.html")
+    books = list_books()
+    return render_template("home.html", books=books)
 
 
 @app.route("/add_author", methods=["GET", "POST"])
