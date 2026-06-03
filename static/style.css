@@ -36,7 +36,7 @@ section {
 
 .book-list {
     display: grid;
-    grid-template-columns: 100px 1fr 1fr 1fr 1fr;
+    grid-template-columns: 100px 1fr 1fr 1fr 1fr 100px;
     grid-template-rows: 60px;
     border: 0.5px solid black;
     border-top: none;
@@ -45,6 +45,10 @@ section {
 
 .book-list div {
     margin: auto 0;
+}
+
+.book-list input {
+    padding: 10px 6px;
 }
 
 .book-list-header {

@@ -93,8 +93,13 @@ def list_books(sort_field=None, reverse=None, search=None):
 
     return result
 
-    
 
+def delete_book(id):
+    """ Deletes a book by id and returns its data. """
+    book = db.get_or_404(Book, id)
+    db.session.delete(book)
+    db.session.commit()
+    return book
 
 
 def insert_author(name, birthdate, deathdate):
@@ -118,14 +123,21 @@ def list_authors():
 
 # Define routes
 
-@app.route("/", methods=["GET"])
+@app.route("/", methods=["GET", "POST"])
 def home():
+    message = None
+
+    if request.method == "POST":
+        book_id = request.form["book_id"]
+        book = delete_book(book_id)
+        message = f"{book} was deleted."
+
     field = request.args.get("sort")
     reverse = request.args.get("reverse")
     search = request.args.get("search")
 
     books = list_books(field, reverse=reverse=="true", search=search)
-    return render_template("home.html", books=books, sort=field, reverse=reverse, search=search)
+    return render_template("home.html", books=books, sort=field, reverse=reverse, search=search, message=message)
 
 
 @app.route("/add_author", methods=["GET", "POST"])
