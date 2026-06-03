@@ -25,7 +25,21 @@ def make_date(datestr):
 
 # Do the database
 
+def insert_book(title, author_id, isbn, year):
+    """ Creates a new book in the database. """
+    book = Book(
+        title=title,
+        author_id=author_id,
+        isbn=isbn,
+        publication_year=year,
+    )
+    db.session.add(book)
+    db.session.commit()
+    return book
+
+
 def insert_author(name, birthdate, deathdate):
+    """ Creates a new author in the database. """
     author = Author(
         name=name,
         birth_date=birthdate,
@@ -35,8 +49,11 @@ def insert_author(name, birthdate, deathdate):
     db.session.commit()
     return author
 
-def other_function():
-    print("Running other_function.")
+
+def list_authors():
+    """ Returns a list of authors as Author objects. """
+    authors = db.session.execute(db.select(Author).order_by(Author.name)).scalars()
+    return authors
 
 
 # Define routes
@@ -48,21 +65,34 @@ def home():
 
 @app.route("/add_author", methods=["GET", "POST"])
 def add_author():
+    message = None
+
     if request.method == "POST":
         author = insert_author(
             request.form["name"],
             make_date(request.form["birthdate"]),
             make_date(request.form["date_of_death"]),
         )
+        message = f"Added {author}"
 
-        return render_template("add_author.html", message=f"Added {author}")
-
-    return render_template("add_author.html")
+    return render_template("add_author.html", message=message)
 
 
-@app.route("/add_book")
+@app.route("/add_book", methods=["GET", "POST"])
 def add_book():
-    return render_template("add_book.html")
+    message = None
+
+    if request.method == "POST":
+        book = insert_book(
+            request.form["title"],
+            request.form["author"], # author id
+            request.form["isbn"],
+            request.form["year"],
+        )
+        message = f"Added {book.__repr__()}"
+
+    authors = list_authors()
+    return render_template("add_book.html", authors=authors, message=message)
 
 
 if __name__ == "__main__":

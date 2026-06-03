@@ -7,9 +7,31 @@
     <link rel="stylesheet" href="{{url_for('static', filename='style.css')}}">
   </head>
   <body>
+    {% if message %}
+    <div style="background-color:aquamarine;height:28px;text-align:center;margin-bottom:10px;display:flex;justify-content:center;align-items:center;">{{ message }}</div>
+    {% endif %}
 
-  <form action="/add_author" method="POST">
-  <!-- Add the form here -->
+  <form style="padding:10px;" action="/add_book" method="POST">
+    <label for="title">Book Title:</label>
+    <input type="text" id="title" name="title" required><br><br>
+
+    <select id="author" name="author">
+      <option selected disabled>Choose Author</option>
+      {% for author in authors %}
+      <option value="{{ author.id }}">{{ author.name }}</option>
+      {% endfor %}
+    </select>
+    <a href="/add_author">Add a new author...</a>
+
+    <h4>Additional Book Information</h4>
+    <label for="isbn">ISBN:</label>
+    <input type="text" id="isbn" name="isbn">
+
+    <label for="year">Publication Year:</label>
+    <input type="text" id="year" name="year"><br><br>
+
+    <input type="submit" value="Add Book">
+
   </form>
 
   </body>
