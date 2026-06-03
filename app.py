@@ -31,6 +31,27 @@ def fetch_cover(isbn):
 
 # Do the database
 
+def sort_books(books, field, reverse=False):
+    print("inside sort_books. field is", field)
+
+    # Title sorting as default
+    result = sorted(books, key=lambda b: b.get_meaningful_sort_title(), reverse=reverse)
+
+    for b in books:
+        print("examining", b)
+        print("Publication Year is", b.publication_year, type(b.publication_year))
+
+    match field:
+        case "author":
+            print("matched field value to 'author'.")
+            result = sorted(books, key=lambda b: b.author.get_sort_name(), reverse=reverse)
+            print("After sorting. result is:", result)
+        case "year":
+            result = sorted(books, key=lambda b: b.publication_year or 0, reverse=reverse)
+    
+    return result
+
+
 def insert_book(title, author_id, isbn, year):
     """ Creates a new book in the database. """
     book = Book(
@@ -44,8 +65,9 @@ def insert_book(title, author_id, isbn, year):
     return book
 
 
-def list_books():
+def list_books(sort_field=None, reverse=None):
     """ Returns a collection of Books, ordered by title. """
+    print("inside list_books. sort_field is", sort_field)
     books = db.session.execute(db.select(Book).order_by(Book.title)).scalars()
 
     # Add a cover image to each book if available
@@ -55,7 +77,7 @@ def list_books():
             book.set_image(fetch_cover(book.isbn))
         result.append(book)
 
-    return sorted(result, key=lambda b: b.get_meaningful_sort_title())
+    return sort_books(result, sort_field, reverse)
 
 
 def insert_author(name, birthdate, deathdate):
@@ -81,8 +103,11 @@ def list_authors():
 
 @app.route("/", methods=["GET"])
 def home():
-    books = list_books()
-    return render_template("home.html", books=books)
+    field = request.args.get("sort")
+    reverse = request.args.get("reverse")
+    print("in home. field is", field)
+    books = list_books(field, reverse=="true")
+    return render_template("home.html", books=books, sort=field, reverse=reverse)
 
 
 @app.route("/add_author", methods=["GET", "POST"])

@@ -15,13 +15,21 @@
         <!-- Cover Image -->
       </div>
       <div>
-        <h2>Title</h2>
+        <h2><a href=
+          "?sort=title&reverse={% if sort=='title' and reverse=='false' %}true{% else %}false{% endif %}"
+          >Title</a>
+        </h2>
       </div>
       <div>
-        <h2>Author</h2>
+        <h2><a href=
+          "?sort=author&reverse={% if sort=='author' and reverse=='false' %}true{% else %}false{% endif %}"
+        >Author</a>
+        </h2>
       </div>
       <div>
-        <h2>Published</h2>
+        <h2><a href=
+          "?sort=year&reverse={% if sort=='year' and reverse=='false' %}true{% else %}false{% endif %}"
+        >Publication Year</a>
       </div>
       <div>
         <h2>ISBN</h2>
