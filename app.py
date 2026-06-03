@@ -23,6 +23,12 @@ def make_date(datestr):
     return datetime.strptime(datestr, "%Y-%m-%d").date()
 
 
+# Cover API Helper
+
+def fetch_cover(isbn):
+    return f"https://covers.openlibrary.org/b/isbn/{isbn}-M.jpg?default=false"
+
+
 # Do the database
 
 def insert_book(title, author_id, isbn, year):
@@ -41,7 +47,15 @@ def insert_book(title, author_id, isbn, year):
 def list_books():
     """ Returns a collection of Books, ordered by title. """
     books = db.session.execute(db.select(Book).order_by(Book.title)).scalars()
-    return sorted(books, key=lambda b: b.get_meaningful_sort_title())
+
+    # Add a cover image to each book if available
+    result = []
+    for book in books:
+        if book.isbn:
+            book.set_image(fetch_cover(book.isbn))
+        result.append(book)
+
+    return sorted(result, key=lambda b: b.get_meaningful_sort_title())
 
 
 def insert_author(name, birthdate, deathdate):

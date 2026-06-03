@@ -10,13 +10,40 @@
 
     <h1>My Books</h1>
 
+    <div class="book-list book-list-header">
+      <div>
+        <!-- Cover Image -->
+      </div>
+      <div>
+        <h2>Title</h2>
+      </div>
+      <div>
+        <h2>Author</h2>
+      </div>
+      <div>
+        <h2>Published</h2>
+      </div>
+      <div>
+        <h2>ISBN</h2>
+      </div>
+    </div>
+
     {% for book in books %}
-    <div>
+    <div class="book-list">
+      <div class="cover-img">
+        <img src="{{ book.image }}" alt="No Cover Found">
+      </div>
       <div>
         <h3>{{ book.title }}</h3>
       </div>
       <div>
         {{ book.author.name }}
+      </div>
+      <div>
+        {{ book.publication_year }}
+      </div>
+      <div>
+        {{ book.isbn }}
       </div>
     </div>
     {% endfor %}

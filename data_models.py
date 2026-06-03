@@ -14,8 +14,11 @@ class Author(db.Model):
     books = db.relationship("Book", back_populates="author")
 
     def get_sort_name(self):
-        """ Transforms the author's name to sort by last name first,
-        then remaining name component.
+        """ Transforms the author's name for sorting.
+        
+        First the last name is used, then the remainder of the name
+        is considered. If the author only has one name,
+        that will be their sorting key.
         """
         parts = self.name.split(" ")
         sort_name = parts[-1]
@@ -39,6 +42,9 @@ class Book (db.Model):
 
     author_id = db.Column(db.ForeignKey("author.id"))
     author = db.relationship("Author", back_populates="books")
+
+    def set_image(self, url):
+        self.image = url
 
     def get_meaningful_sort_title(self):
         """ Returns the title, transformed for meaningful sorting.

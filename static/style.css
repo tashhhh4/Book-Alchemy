@@ -1,4 +1,66 @@
+* {
+    box-sizing: border-box;
+}
+
 body {
     padding: 0;
     margin: 0;
+    font-family: Helvetica, Arial, sans-serif;
+}
+
+.book-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    grid-template-rows: 60px;
+    border: 0.5px solid black;
+    border-top: none;
+    row-gap: -2px;
+}
+
+.book-list div {
+    margin: auto 0;
+}
+
+.book-list-header {
+    border-top: 0.5px solid black;
+    font-size: 14px;
+}
+
+.book-list-header div {
+    margin: auto 0;
+}
+
+.book-list-header h2 {
+    margin: 0;
+}
+
+.cover-img {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    padding: 4px;
+}
+
+.cover-img img {
+    margin: auto;
+    height: 100%;
+    line-height: 60px;
+}
+
+.cover-img img:hover {
+    max-height: auto;
+    height: auto;
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+/* Disable hover effect for books without an image */
+.cover-img img[src=""]:hover {
+    max-height: 100%;
+    height: 100%;
+    margin: auto;
+    position: static;
+    top: 0;
+    transform: translateY(0);
 }
