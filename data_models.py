@@ -55,10 +55,12 @@ class Book (db.Model):
 
 
     def __str__(self):
-        return f"Book \"{self.title}\""
+        return f"\"{self.title}\""
 
     def __repr__(self):
         output = self.__str__()
+        if self.author:
+            output += f", {self.author}"
         if self.publication_year:
             output += f" ({self.publication_year})"
         if self.isbn:
