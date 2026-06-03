@@ -10,51 +10,64 @@
 
     <h1>My Books</h1>
 
-    <div class="book-list book-list-header">
-      <div>
-        <!-- Cover Image -->
+    <section>
+      <form method="GET">
+        <label for="search">Search book titles: </label>
+        <input type="text" id="search" name="search">
+        <input type="submit" autocomplete="off">
+        {% if search %}
+        <span class="search-feedback">Searching for: "{{ search }}" ({{ books|length }} results)</span>
+        {% endif %}
+      </form>
+    </section>
+    
+    <section>
+      <div class="book-list book-list-header">
+        <div>
+          <!-- Cover Image -->
+        </div>
+        <div>
+          <h2><a href=
+            "?sort=title&reverse={% if sort=='title' and reverse=='false' %}true{% else %}false{% endif %}"
+            >Title</a>
+          </h2>
+        </div>
+        <div>
+          <h2><a href=
+            "?sort=author&reverse={% if sort=='author' and reverse=='false' %}true{% else %}false{% endif %}"
+          >Author</a>
+          </h2>
+        </div>
+        <div>
+          <h2><a href=
+            "?sort=year&reverse={% if sort=='year' and reverse=='false' %}true{% else %}false{% endif %}"
+          >Publication Year</a>
+        </div>
+        <div>
+          <h2>ISBN</h2>
+        </div>
       </div>
-      <div>
-        <h2><a href=
-          "?sort=title&reverse={% if sort=='title' and reverse=='false' %}true{% else %}false{% endif %}"
-          >Title</a>
-        </h2>
-      </div>
-      <div>
-        <h2><a href=
-          "?sort=author&reverse={% if sort=='author' and reverse=='false' %}true{% else %}false{% endif %}"
-        >Author</a>
-        </h2>
-      </div>
-      <div>
-        <h2><a href=
-          "?sort=year&reverse={% if sort=='year' and reverse=='false' %}true{% else %}false{% endif %}"
-        >Publication Year</a>
-      </div>
-      <div>
-        <h2>ISBN</h2>
-      </div>
-    </div>
 
-    {% for book in books %}
-    <div class="book-list">
-      <div class="cover-img">
-        <img src="{{ book.image }}" alt="No Cover Found">
+      {% for book in books %}
+      <div class="book-list">
+        <div class="cover-img">
+          <img src="{{ book.image }}" alt="No Cover Found">
+        </div>
+        <div>
+          <h3>{{ book.title }}</h3>
+        </div>
+        <div>
+          {{ book.author.name }}
+        </div>
+        <div>
+          {{ book.publication_year }}
+        </div>
+        <div>
+          {{ book.isbn }}
+        </div>
       </div>
-      <div>
-        <h3>{{ book.title }}</h3>
-      </div>
-      <div>
-        {{ book.author.name }}
-      </div>
-      <div>
-        {{ book.publication_year }}
-      </div>
-      <div>
-        {{ book.isbn }}
-      </div>
-    </div>
-    {% endfor %}
+      {% endfor %}
+    </section>
 
   </body>
 </html>
