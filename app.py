@@ -52,8 +52,9 @@ def insert_author(name, birthdate, deathdate):
 
 def list_authors():
     """ Returns a list of authors as Author objects. """
-    authors = db.session.execute(db.select(Author).order_by(Author.name)).scalars()
-    return authors
+    authors = db.session.execute(db.select(Author).order_by(Author.id)).scalars()
+    return sorted(authors, key=lambda a: a.get_sort_name())
+
 
 
 # Define routes
