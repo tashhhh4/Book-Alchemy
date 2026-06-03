@@ -14,13 +14,14 @@ class Author(db.Model):
     books = db.relationship("Book", back_populates="author")
 
     def get_sort_name(self):
-        """ Tries to get the author's last name.
-        If the author's name is only one word,
-        returns the original name.
+        """ Transforms the author's name to sort by last name first,
+        then remaining name component.
         """
         parts = self.name.split(" ")
-        last_name = parts[-1]
-        return last_name
+        sort_name = parts[-1]
+        if len(parts) > 1:
+            sort_name += " ".join(parts[:-1])
+        return sort_name
 
     def __str__(self):
         return f"{self.name}"
