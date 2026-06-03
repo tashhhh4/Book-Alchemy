@@ -53,13 +53,21 @@ def search_book_titles(books, search):
     books = [b for b in books if search.lower() in b.title.lower()]
     return books
 
+def clean_isbn(isbn):
+    """ Automatically strips whitespace and dashes (-) from ISBN numbers,
+    allowing more convenient form entry.
+    """
+    isbn = isbn.replace(" ", "")
+    isbn = isbn.replace("-", "")
+    return isbn
+
 
 def insert_book(title, author_id, isbn, year):
     """ Creates a new book in the database. """
     book = Book(
         title=title,
         author_id=author_id,
-        isbn=isbn,
+        isbn=clean_isbn(isbn),
         publication_year=year,
     )
     db.session.add(book)
