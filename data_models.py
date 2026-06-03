@@ -15,7 +15,8 @@ class Author(db.Model):
         return f"{self.name}"
 
     def __repr__(self):
-        return self.__str__(self)
+        output = self.__str__()
+        return output
 
 
 class Book (db.Model):
@@ -26,7 +27,12 @@ class Book (db.Model):
     author_id = db.Column(db.ForeignKey("author.id"))
 
     def __str__(self):
-        return f"Book '{self.title}'"
+        return f"Book \"{self.title}\""
 
     def __repr__(self):
-        return f"{self.title} <ISBN-{self.isbn}>"
+        output = self.__str__()
+        if self.publication_year:
+            output += f" ({self.publication_year})"
+        if self.isbn:
+            output += f" <ISBN-{self.isbn}>"
+        return output
