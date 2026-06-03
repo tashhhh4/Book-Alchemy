@@ -1,0 +1,7 @@
+[project]
+name = "book-alchemy"
+version = "1.0.0"
+description = "A web-based book tracking app"
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = []
