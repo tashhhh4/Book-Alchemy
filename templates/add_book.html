@@ -8,10 +8,12 @@
   </head>
   <body>
     {% if message %}
-    <div style="background-color:aquamarine;height:28px;text-align:center;margin-bottom:10px;display:flex;justify-content:center;align-items:center;">{{ message }}</div>
+    <div class="message">{{ message }}</div>
     {% endif %}
 
-  <form style="padding:10px;" action="/add_book" method="POST">
+  <h1>Add New Book</h1>
+
+  <form action="/add_book" method="POST">
     <label for="title">Book Title:</label>
     <input type="text" id="title" name="title" autocomplete="off" required><br><br>
 
