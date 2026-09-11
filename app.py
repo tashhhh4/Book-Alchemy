@@ -65,10 +65,14 @@ def clean_isbn(isbn):
 
 def insert_book(title, author_id, isbn, year):
     """ Creates a new book in the database. """
+    isbn = clean_isbn(isbn)
+    if isbn == "":
+        isbn = None
+
     book = Book(
         title=title,
         author_id=author_id,
-        isbn=clean_isbn(isbn),
+        isbn=isbn,
         publication_year=year,
     )
 
@@ -185,10 +189,12 @@ def add_book():
 
     if request.method == "POST":
         isbn = request.form["isbn"]
+        author = request.form.get("author")
+        print("author is", author)
         try:
             book = insert_book(
                 request.form["title"],
-                request.form["author"], # author id
+                author, # author id
                 isbn,
                 request.form["year"],
             )
@@ -204,6 +210,7 @@ def add_book():
                     message = f"Error: ISBN <{isbn}> already present in database ({existing_book.author} - {existing_book.title})."
             else:
                 message = f"An unknown Error occurred."
+                print(e)
 
     authors = list_authors()
     return render_template("add_book.html", authors=authors, message=message, error=error)
