@@ -15,6 +15,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{os.path.join(basedir, 'data
 db.init_app(app)
 
 
+
 # Date Helper
 
 def make_date(datestr):
@@ -145,14 +146,22 @@ def add_author():
     message = None
 
     if request.method == "POST":
-        author = insert_author(
-            request.form["name"],
-            make_date(request.form["birthdate"]),
-            make_date(request.form["date_of_death"]),
-        )
-        message = f"Added {author}"
+        author_name = request.form["name"]
+        try:
+            author = insert_author(
+                author_name,
+                make_date(request.form["birthdate"]),
+                make_date(request.form["date_of_death"]),
+            )
+            message = f"Added {author}"
+        except Exception as e:
+            error_message = str(e)
+            if "IntegrityError" in error_message and "author.name" in error_message:
+                message = f"Error: Author \"{author_name}\" already exists!"
+            else:
+                message = f"Error: {e}"
 
-    return render_template("add_author.html", message=message)
+    return render_template("add_author.html", message=message, error=True)
 
 
 @app.route("/add_book", methods=["GET", "POST"])
@@ -174,8 +183,8 @@ def add_book():
 
 if __name__ == "__main__":
 
-    app.run()
+    # Create DB Schema
+    with app.app_context():
+        db.create_all()
 
-    # DB Migrations
-    # with app.app_context():
-        # db.create_all()
+    app.run()

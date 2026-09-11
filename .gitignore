@@ -8,5 +8,9 @@ __pycache__/
 # Virtual environments
 .venv
 
+
+# Scratch Notes
+notes/
+
 # Database file
 # library.sqlite

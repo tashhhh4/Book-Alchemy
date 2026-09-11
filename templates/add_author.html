@@ -8,7 +8,7 @@
   </head>
   <body>
   {% if message %}
-  <div class="message">{{ message }}</div>
+  <div class="message {% if error %}error{% endif %}">{{ message }}</div>
   {% endif %}
 
   <h1>Add New Author</h1>

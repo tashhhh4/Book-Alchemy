@@ -18,13 +18,17 @@ section {
 
 /* Add Forms */
 .message {
-    background-color:aquamarine;
-    height:28px;
-    text-align:center;
-    margin-bottom:10px;
-    display:flex;
-    justify-content:center;
-    align-items:center;
+    background-color: aquamarine;
+    height: 28px;
+    text-align: center;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.message.error {
+    background-color: lightcoral;
 }
 
 /* Library Homepage */
