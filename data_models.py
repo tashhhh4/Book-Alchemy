@@ -48,6 +48,11 @@ class Book (db.Model):
     author_id = db.Column(db.ForeignKey("author.id"))
     author = db.relationship("Author", back_populates="books")
 
+    __table_args__ = (
+        CheckConstraint("length(title) > 0",
+                        name="title_min_length"),
+    )
+
     def set_image(self, url):
         self.image = url
 

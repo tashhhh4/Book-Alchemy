@@ -211,6 +211,8 @@ def add_book():
                     message = f"Error: ISBN is already present in database but no book has it (this should never happen)."
                 else:
                     message = f"Error: ISBN <{isbn}> already present in database ({existing_book.author} - {existing_book.title})."
+            elif "IntegrityError" in error_message and "title_min_length" in error_message:
+                message = "Error: Book title cannot be blank!"
             else:
                 message = f"An unknown Error occurred."
                 print(e)
