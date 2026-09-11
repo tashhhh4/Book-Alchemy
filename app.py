@@ -71,8 +71,20 @@ def insert_book(title, author_id, isbn, year):
         isbn=clean_isbn(isbn),
         publication_year=year,
     )
-    db.session.add(book)
-    db.session.commit()
+
+    try:
+        db.session.add(book)
+        db.session.commit()
+    except Exception:
+        db.session.rollback()
+        raise
+
+    return book
+
+
+def get_book_by_isbn(isbn):
+    """ Fetches a book with the isbn if exists, or None. """
+    book = db.session.execute(db.select(Book).where(Book.isbn==isbn)).scalar_one_or_none()
     return book
 
 
@@ -144,41 +156,57 @@ def home():
 @app.route("/add_author", methods=["GET", "POST"])
 def add_author():
     message = None
+    error = False
 
     if request.method == "POST":
-        author_name = request.form["name"]
+        name = request.form["name"]
         try:
             author = insert_author(
-                author_name,
+                name,
                 make_date(request.form["birthdate"]),
                 make_date(request.form["date_of_death"]),
             )
             message = f"Added {author}"
         except Exception as e:
+            error = True
             error_message = str(e)
             if "IntegrityError" in error_message and "author.name" in error_message:
-                message = f"Error: Author \"{author_name}\" already exists!"
+                message = f"Error: Author \"{name}\" already exists!"
             else:
-                message = f"Error: {e}"
+                message = f"An unknown error occurred."
 
-    return render_template("add_author.html", message=message, error=True)
+    return render_template("add_author.html", message=message, error=error)
 
 
 @app.route("/add_book", methods=["GET", "POST"])
 def add_book():
     message = None
+    error = False
 
     if request.method == "POST":
-        book = insert_book(
-            request.form["title"],
-            request.form["author"], # author id
-            request.form["isbn"],
-            request.form["year"],
-        )
-        message = f"Added {book.__repr__()}"
+        isbn = request.form["isbn"]
+        try:
+            book = insert_book(
+                request.form["title"],
+                request.form["author"], # author id
+                isbn,
+                request.form["year"],
+            )
+            message = f"Added {book.__repr__()}"
+        except Exception as e:
+            error = True
+            error_message = str(e)
+            if "IntegrityError" in error_message and "book.isbn" in error_message:
+                existing_book = get_book_by_isbn(isbn)
+                if not existing_book:
+                    message = f"Error: ISBN is already present in database but no book has it (this should never happen)."
+                else:
+                    message = f"Error: ISBN <{isbn}> already present in database ({existing_book.author} - {existing_book.title})."
+            else:
+                message = f"An unknown Error occurred."
 
     authors = list_authors()
-    return render_template("add_book.html", authors=authors, message=message)
+    return render_template("add_book.html", authors=authors, message=message, error=error)
 
 
 if __name__ == "__main__":
