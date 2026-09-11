@@ -176,8 +176,11 @@ def add_author():
             error_message = str(e)
             if "IntegrityError" in error_message and "author.name" in error_message:
                 message = f"Error: Author \"{name}\" already exists!"
+            elif "IntegrityError" in error_message and "name_min_length" in error_message:
+                message = f"Error: Author name cannot be empty!"
             else:
                 message = f"An unknown error occurred."
+                print(e)
 
     return render_template("add_author.html", message=message, error=error)
 

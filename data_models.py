@@ -1,4 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.schema import CheckConstraint
 
 db = SQLAlchemy()
 
@@ -12,6 +13,11 @@ class Author(db.Model):
     date_of_death = db.Column(db.Date, nullable=True)
 
     books = db.relationship("Book", back_populates="author")
+
+    __table_args__ = (
+        CheckConstraint("length(name) > 0",
+                        name="name_min_length"),
+    )
 
     def get_sort_name(self):
         """ Transforms the author's name for sorting.
@@ -32,7 +38,6 @@ class Author(db.Model):
     def __repr__(self):
         output = self.__str__()
         return output
-
 
 class Book (db.Model):
     id = db.Column(db.Integer, primary_key=True)
