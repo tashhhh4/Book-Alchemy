@@ -74,10 +74,10 @@
           {{ book.author.name }}
         </div>
         <div>
-          {{ book.publication_year }}
+          {% if book.publication_year %}{{ book.publication_year }}{% endif %}
         </div>
         <div>
-          {{ book.isbn }}
+          {% if book.isbn %}{{ book.isbn }}{% endif %}
         </div>
         <div>
           <form method="POST" onsubmit="return confirm('Really delete {{ book }}?')">
