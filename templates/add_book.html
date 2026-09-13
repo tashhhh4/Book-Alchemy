@@ -11,6 +11,8 @@
   <div class="message {% if error %}error{% endif %}">{{ message }}</div>
   {% endif %}
 
+  {% include "header.html" %}
+
   <h1>Add New Book</h1>
 
   <form action="/add_book" method="POST">
